@@ -49,11 +49,11 @@ main() {
   fi
 
   curl https://raw.githubusercontent.com/razeencheng/git-hooks/master/git-commit-msg.sh -o .git/hooks/commit-msg
-  curl https://github.com/razeencheng/git-hooks/blob/master/golang-pre-commit.sh -o .git/hooks/pre-commit
+  curl https://raw.githubusercontent.com/razeencheng/git-hooks/master/golang-pre-commit.sh -o .git/hooks/pre-commit
 
   chmod +x .git/hooks/commit-msg .git/hooks/pre-commit
 
-  _green "golang pre-commit hook & commit-msg hook install success!"
+  _green "Golang pre-commit hook & commit-msg hook Install Success!"
 }
 
 main "$@"
