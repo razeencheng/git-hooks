@@ -8,7 +8,6 @@ has_errors=0
 # --diff-filter=ACM 过滤暂存文件，A=Added C=Copied M=Modified, 即筛选出添加/复制/修改的文件
 allgofiles=$(git diff --cached --name-only --diff-filter=ACM | grep '.go$')
 
-
 # 过滤vendor的
 gofiles=()
 for allfile in ${allgofiles[@]}; do 
@@ -21,14 +20,10 @@ done
 
 [ -z "$gofiles" ] && exit 0
 
-for file in ${gofiles[@]}; do 
-echo 'ALL: '$file
-done
-
 # gofmt 格式化代码
 unformatted=$(gofmt -l ${gofiles[@]})
 if [ -n "$unformatted" ]; then
-	echo >&2 "gofmt FAIL:\n 运行以下命令:"
+	echo >&2 "gofmt FAIL:\n Run following command:"
 	for f in ${unformatted[@]}; do
 		echo >&2 " gofmt -w $PWD/$f"
 	done
@@ -40,7 +35,7 @@ fi
 if goimports >/dev/null 2>&1; then  # 检测是否安装
 	unimports=$(goimports -l ${gofiles[@]})
 	if [ -n "$unimports" ]; then
-		echo >&2 "goimports FAIL:\n以下文件需要重新导包:"
+		echo >&2 "goimports FAIL:\nRun following command:"
 		for f in ${unimports[@]} ; do
 			echo >&2 " goimports -w $PWD/$f"
 		done
@@ -48,7 +43,7 @@ if goimports >/dev/null 2>&1; then  # 检测是否安装
 		has_errors=1
 	fi
 else
-	echo 'Error: goimports 未安装。运行: "go get -u golang.org/x/tools/cmd/goimports" 安装' >&2
+	echo 'Error: goimports not install. Run: "go get -u golang.org/x/tools/cmd/goimports"' >&2
 	exit 1
 fi
 
@@ -67,14 +62,15 @@ if golint >/dev/null 2>&1; then  # 检测是否安装
 		echo "\n"
 	fi
 else
-	echo 'Error: golint 未安装。 运行: "go get -u github.com/golang/lint/golint" 安装' >&2
+	echo 'Error: golint not install. Run: "go get -u github.com/golang/lint/golint"' >&2
 	exit 1
 fi
 
 # go vet 静态错误检查
 show_vet_header=true
 for file in ${gofiles[@]} ; do
-	vet=$(go vet $file 2>&1)
+	dir=`echo "$file" |xargs -n1 dirname|sort -u`
+	vet=$(go vet $PWD/$dir 2>&1)
 	if [ -n "$vet" -a $show_vet_header = true ] ; then
 		echo "govet:"
 		show_vet_header=false
