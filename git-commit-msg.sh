@@ -1,6 +1,6 @@
 #!/bin/sh
 
-COMMIT_MSG=`cat $1 | egrep "^(feat|fix|docs|chore)\(\w+\)?:\s(\S|\w)+"`
+COMMIT_MSG=`cat $1 | egrep "^(feat|fix|docs|chore)(\(\w+\))?:\s(\S|\w)+"`
 
 if [ "$COMMIT_MSG" = "" ]; then
 	echo "Commit Message 不规范，请检查!\n"
