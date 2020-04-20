@@ -8,11 +8,12 @@ has_errors=0
 # --diff-filter=ACM 过滤暂存文件，A=Added C=Copied M=Modified, 即筛选出添加/复制/修改的文件
 allgofiles=$(git diff --cached --name-only --diff-filter=ACM | grep '.go$')
 
-# 过滤vendor的
 gofiles=()
 godirs=()
 for allfile in ${allgofiles[@]}; do 
-    if [[ $allfile == "vendor"* ]];then
+    # 过滤vendor的
+    # 过滤prootobuf自动生产的文件
+    if [[ $allfile == "vendor"* || $allfile == *".pb.go" ]];then
         continue
     else
         gofiles+=("$allfile")
@@ -97,4 +98,3 @@ done
 
 
 exit $has_errors
-
