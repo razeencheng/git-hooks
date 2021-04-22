@@ -8,8 +8,9 @@ has_errors=0
 # --diff-filter=ACM 过滤暂存文件，A=Added C=Copied M=Modified, 即筛选出添加/复制/修改的文件
 allgofiles=$(git diff --cached --name-only --diff-filter=ACM | grep '.go$')
 
-gofiles=()
-godirs=()
+#在高版本的bash里直接用gofiles=()会报错
+declare -a gofiles
+declare -a godirs
 for allfile in ${allgofiles[@]}; do 
     # 过滤vendor的
     # 过滤prootobuf自动生产的文件
